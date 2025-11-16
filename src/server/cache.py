@@ -2,13 +2,14 @@ import inspect
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
-from functools import wraps
+from functools import update_wrapper
 from threading import Lock
 from typing import ParamSpec, TypeVar
 
 
-T = TypeVar("T")
 P = ParamSpec("P")
+T = TypeVar("T")
+T_co = TypeVar("T_co", covariant=True)
 
 
 @dataclass(slots=True)
@@ -17,39 +18,47 @@ class CacheEntry[T]:
     result: T
 
 
-def cache_with_ttl(*, ttl: float) -> Callable[[Callable[P, T]], Callable[P, T]]:
-    def decorator(f: Callable[P, T]) -> Callable[P, T]:
-        mutex_lock = Lock()
+class CachedFunction[**P, T_co]:
+    __name__: str
 
-        _results: dict[tuple, CacheEntry[T]] = {}
-        sig = inspect.signature(f)
+    def __init__(self, f: Callable[P, T_co], ttl: float) -> None:
+        self._f = f
+        self._ttl = ttl
+        self._sig = inspect.signature(f)
+        self._cache: dict[tuple, CacheEntry[T_co]] = {}
+        self._lock = Lock()
 
-        @wraps(f)
-        def wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
-            current_epoch = time.monotonic()
+        update_wrapper(self, f)
 
-            bound = sig.bind(*args, **kwargs)
-            bound.apply_defaults()
+    def clear_cache(self) -> None:
+        with self._lock:
+            self._cache.clear()
 
-            hashed = tuple((name, bound.arguments[name]) for name in sig.parameters)
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T_co:
+        now = time.monotonic()
 
-            with mutex_lock:
-                entry = _results.get(hashed)
-                if entry and entry.creation_time + ttl > current_epoch:
-                    return entry.result
+        bound = self._sig.bind(*args, **kwargs)
+        bound.apply_defaults()
+        hashed = tuple((name, bound.arguments[name]) for name in self._sig.parameters)
 
-            ret = f(*args, **kwargs)
+        with self._lock:
+            entry = self._cache.get(hashed)
+            if entry and entry.creation_time + self._ttl > now:
+                return entry.result
 
-            with mutex_lock:
-                entry = _results.get(hashed)
-                if entry and entry.creation_time + ttl > current_epoch:
-                    return entry.result
-                _results[hashed] = CacheEntry(creation_time=current_epoch, result=ret)
+        result = self._f(*args, **kwargs)
 
-            return ret
+        with self._lock:
+            entry = self._cache.get(hashed)
+            if entry and entry.creation_time + self._ttl > now:
+                return entry.result
+            self._cache[hashed] = CacheEntry(now, result)
 
-        wrapper.clear_cache = _results.clear
+        return result
 
-        return wrapper
+
+def cache_with_ttl(*, ttl: float) -> Callable[[Callable[P, T_co]], CachedFunction[P, T_co]]:
+    def decorator(f: Callable[P, T_co]) -> CachedFunction[P, T_co]:
+        return CachedFunction(f, ttl)
 
     return decorator

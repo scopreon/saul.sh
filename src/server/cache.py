@@ -16,11 +16,6 @@ class CacheEntry[T]:
     result: T
 
 
-kwd_mark = (
-    object()
-)  # https://stackoverflow.com/questions/10220599/how-to-hash-args-kwargs-for-function-cache
-
-
 # this is NOT thread safe
 def cache_with_ttl(*, ttl: float) -> Callable[[Callable[P, T]], Callable[P, T]]:
     def decorator(f: Callable[P, T]) -> Callable[P, T]:

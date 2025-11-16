@@ -17,7 +17,6 @@ class CacheEntry[T]:
     result: T
 
 
-# this is NOT thread safe
 def cache_with_ttl(*, ttl: float) -> Callable[[Callable[P, T]], Callable[P, T]]:
     def decorator(f: Callable[P, T]) -> Callable[P, T]:
         mutex_lock = Lock()

@@ -11,8 +11,6 @@ RUN sh /uv-installer.sh && rm /uv-installer.sh
 
 RUN cp /root/.local/bin/uv /usr/local/bin/uv && chmod 0755 /usr/local/bin/uv
 
-# Ensure the installed binary is on the `PATH`
-ENV PATH="/root/.local/bin/:$PATH"
 ENV UV_PYTHON=/usr/local/bin/python3.13
 
 COPY ./pyproject.toml ./uv.lock /app/

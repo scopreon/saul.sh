@@ -4,5 +4,30 @@ services:
       context: .
       dockerfile: ./src/backend/Dockerfile
     volumes:
-    - ./src:/app/src
+      - ./src:/app/src:ro
+    networks:
+      - appnet
+    healthcheck:
+      test: curl --fail http://localhost:8000/health || exit 1
+      interval: 2s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
 
+  frontend:
+    build:
+      context: .
+      dockerfile: ./src/frontend/Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - ./src:/app/src:ro
+    networks:
+      - appnet
+    depends_on:
+      backend:
+        condition: service_healthy
+
+networks:
+  appnet:
+    driver: bridge

@@ -20,13 +20,9 @@ function App() {
   });
 
   useEffect(() => {
-    const arrivalsSocket = new WebSocket(
-      'ws://localhost:8000/ws/arrivals/bank/northern/outbound'
-    );
+    const arrivalsSocket = new WebSocket('/ws/arrivals/bank/northern/outbound');
 
-    const statusSocket = new WebSocket(
-      'ws://localhost:8000/ws/status/northern'
-    );
+    const statusSocket = new WebSocket('/ws/status/northern');
 
     statusSocket.addEventListener('message', (event) => {
       const data = JSON.parse(event.data);

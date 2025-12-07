@@ -11,6 +11,11 @@ from .tfl import get_arrivals, get_line_status
 app = FastAPI()
 
 
+@app.get("/health")
+def health_check() -> dict[str, str]:
+    return {"status": "healthy"}
+
+
 @app.websocket("/ws/arrivals/{station}/{line}")
 @app.websocket("/ws/arrivals/{station}/{line}/{direction}")
 async def ws_get_arrivals(

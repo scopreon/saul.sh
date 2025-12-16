@@ -18,10 +18,14 @@ services:
     build:
       context: .
       dockerfile: ./src/frontend/Dockerfile
+      args:
+        NGINX_ENV: "prod"
     ports:
       - 80:80
+      - 443:443
     volumes:
       - ./src:/app/src:ro
+      - /etc/letsencrypth:/etc/letsencrypt:ro
     networks:
       - appnet
     depends_on:

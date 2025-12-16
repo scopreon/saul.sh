@@ -39,3 +39,9 @@ wheels/
 
 # Private
 .env
+
+# Certs
+dev-certs/
+
+# dev
+docker-compose.override.yaml

@@ -16,7 +16,7 @@ add-pre-commit:
 
 uv-export:
 	uv export --format requirements.txt > ./requirements.txt
-
+  
 dev-certs:
 	mkdir dev-certs
 	openssl genpkey -algorithm RSA -out dev-certs/server.key

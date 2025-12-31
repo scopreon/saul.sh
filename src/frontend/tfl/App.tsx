@@ -20,7 +20,19 @@ export function App() {
   });
 
   useEffect(() => {
-    const arrivalsSocket = new WebSocket('/ws/arrivals/bank/northern/outbound');
+    const date = new Date();
+    let start_station = '';
+    let direction = '';
+    if (date.getHours() < 12) {
+      start_station = 'edgware';
+      direction = 'inbound';
+    } else {
+      start_station = 'bank';
+      direction = 'outbound';
+    }
+    const arrivalsSocket = new WebSocket(
+      `/ws/arrivals/${start_station}/northern/${direction}`
+    );
 
     const statusSocket = new WebSocket('/ws/status/northern');
 

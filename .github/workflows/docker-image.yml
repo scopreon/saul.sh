@@ -3,6 +3,8 @@ name: Deploy on merge to main
 on:
   push:
     branches: ['main']
+  schedule:
+    - cron: '0 2 * * *'
 
 jobs:
   deploy:

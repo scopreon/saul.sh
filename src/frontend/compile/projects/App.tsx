@@ -12,6 +12,21 @@ type Project = {
 
 const projects: Project[] = [
   {
+    name: 'pystack',
+    description:
+      "General contributor to Bloomberg's pystack, a tool to analyse the stack of \
+      Python processes. Notable contribution: added subinterpreter support, covering \
+      both native (C) and Python frames, so tracebacks correctly show which interpreter \
+      each frame belongs to when a process is running multiple subinterpreters.",
+    github: 'https://github.com/bloomberg/pystack',
+    references: [
+      {
+        label: 'Subinterpreter support PR',
+        href: 'https://github.com/bloomberg/pystack/pull/279',
+      },
+    ],
+  },
+  {
     name: 'forkache',
     description:
       'A simple cache invalidation library for Python that automatically clears cached \

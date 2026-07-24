@@ -127,7 +127,6 @@ export function App() {
   return (
     <>
       <h1 className="page-title">Projects</h1>
-      <h2 className="page-sub-title">AI usage kept to bare minimum</h2>
 
       <div className="projects-grid">
         {projects.map((project) => (

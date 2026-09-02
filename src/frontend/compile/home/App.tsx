@@ -5,6 +5,7 @@ export function App() {
   return (
     <div className="mandelbrot-page">
       <h1>Hi</h1>
+      <h2>Don't judge me by my web design</h2>
       <p>WebGL Mandelbrot (drag and scroll to zoom)</p>
       <Canvas width={500} height={500} />
     </div>

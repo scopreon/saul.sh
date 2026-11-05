@@ -28,6 +28,7 @@ services:
     volumes:
       - ./src:/app/src:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/certbot:/var/www/certbot:ro
     networks:
       - appnet
     depends_on:

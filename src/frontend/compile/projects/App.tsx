@@ -27,6 +27,12 @@ const projects: Project[] = [
     ],
   },
   {
+    name: 'go-strace',
+    description:
+      'A Go implementation of strace, built as a learning exercise.',
+    github: 'https://github.com/scopreon/go-strace',
+  },
+  {
     name: 'forkache',
     description:
       'A simple cache invalidation library for Python that automatically clears cached \

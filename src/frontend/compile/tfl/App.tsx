@@ -31,7 +31,7 @@ export function App() {
       start_station = 'edgware';
       direction = 'inbound';
     } else {
-      start_station = 'bank';
+      start_station = "King's Cross St. Pancras";
       direction = 'outbound';
     }
     const arrivalsSocket = new WebSocket(

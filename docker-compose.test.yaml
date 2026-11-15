@@ -1,0 +1,6 @@
+services:
+  frontend:
+    volumes: !override
+      - ./src:/app/src:ro
+      - ./dev-certs:/etc/ssl/certs:ro
+      - /var/www/certbot:/var/www/certbot:ro

@@ -16,7 +16,7 @@ RUN --mount=type=cache,target=/root/.npm \
     npm install .
 RUN npm run build
 
-FROM nginxinc/nginx-unprivileged
+FROM nginx/nginx-unprivileged
 USER root
 
 # Clean default nginx html folder (run as root to avoid permission errors)
